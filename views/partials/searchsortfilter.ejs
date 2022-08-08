@@ -1,0 +1,191 @@
+<div class="search-sort-filter mt-3 w-75">
+    <!-- Search Bar -->
+    <form action="" class=" mr-3">
+        <div class="input-group mb-3 flex-fill flex-grow-1" style="width: 500px;">
+            <div class="input-group-prepend">
+                <span class="input-group-text border-info" id="basic-addon1"
+                    style="background-color: transparent;">🔎</span>
+            </div>
+            <input type="text" class="form-control border-info" placeholder="Search" aria-label="Username"
+                aria-describedby="basic-addon1" id="search_bar">
+        </div>
+    </form>
+
+    <!-- Sort & Filter -->
+    <button type="button" class="btn btn-outline-info flex-fill w-100" style="height:50%;" data-bs-toggle="modal"
+        data-bs-target="#sortFilterModal">Sort & Filter</button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="sortFilterModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Sort & Filter</h5>
+                </div>
+                <div class="modal-body">
+                    <form action="/" method="GET">
+                        <h5 class="mb-2">Sort by...</h5>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="sortBy" id="followersDesc"
+                                value="followers" <% if (last_sort=='followers' || last_sort=='' ) { %> checked <% } %>>
+                                <label class="form-check-label" for="followersDesc">
+                                    Twitter Followers
+                                </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="sortBy" id="tweetsDesc"
+                                value="num_tweets" <% if (last_sort=='num_tweets' ) { %> checked <% } %>>
+                                <label class="form-check-label" for="tweetsDesc">
+                                    Number of Tweets
+                                </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="sortBy" id="avglikes" value="avg_likes"
+                                <% if (last_sort=='avg_likes' ) { %> checked <% } %>>
+                                <label class="form-check-label" for="avglikes">
+                                    Average Tweet Likes
+                                </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="sortBy" id="avgreplies"
+                                value="avg_replies" <% if (last_sort=='avg_replies' ) { %> checked <% } %>>
+                                <label class="form-check-label" for="avgreplies">
+                                    Average Tweet Replies
+                                </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="sortBy" id="avgretweets"
+                                value="avg_retweets" <% if (last_sort=='avg_retweets' ) { %> checked <% } %>>
+                                <label class="form-check-label" for="avgretweets">
+                                    Average Tweet Retweets
+                                </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="sortBy" id="mintDesc"
+                                value="internal_date" <% if (last_sort=='internal_date' ) { %> checked <% } %>>
+                                <label class="form-check-label" for="mintDesc">
+                                    Drop Date
+                                </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="sortBy" id="titleDesc" value="title" <%
+                                if (last_sort=='title' ) { %> checked <% } %>>
+                                <label class="form-check-label" for="titleDesc">
+                                    Title Alphabetically
+                                </label>
+                        </div>
+                        <h5 class="mt-3 mb-2">Filter...</h5>
+                        <!-- Follower filter -->
+                        <!-- If statements dynamically change slider values and placeholders -->
+                        <div class="form-group">
+                            <label for="followersRange" class="form-label">Followers At Least: <span id="followersEval"
+                                    class="text-primary">
+                                    <% if (last_followers !==10000 && last_followers !=='' && last_followers>= 0 &&
+                                        last_followers <= 20000 && typeof(last_followers)=="number" ) { %>
+                                            <%=last_followers%>
+                                                <%} else {%>
+                                                    10000
+                                                    <%}%>
+                                </span> </label>
+                            <input type="range" class="form-range" id="followersRange"
+                                onChange="document.getElementById('followersEval').innerText = document.getElementById('followersRange').value"
+                                min="0" max="20000" step="200" name="followers" <% if (last_followers !==10000 &&
+                                last_followers !=='' && last_followers>= 0 &&
+                            last_followers <= 20000 && typeof(last_followers)=="number" ) { %>
+                                value="<%=last_followers%>"
+                                    <%} %>>
+                        </div>
+                        <!-- Number of tweets filter -->
+                        <div class="form-group">
+                            <label for="tweetsRange" class="form-label">Tweets At Least: <span id="tweetsEval"
+                                    class="text-primary">
+                                    <% if (last_tweets !=='2500' && last_tweets !=='' && last_tweets>= 0 &&
+                                        last_tweets <= 300 & typeof(last_tweets)=="number" ){ %>
+                                            <%=last_tweets%>
+                                                <%} else {%>
+                                                    150
+                                                    <% }%>
+                                </span> </label>
+                            <input type="range" class="form-range" id="tweetsRange"
+                                onChange="document.getElementById('tweetsEval').innerText = document.getElementById('tweetsRange').value"
+                                min="0" max="300" step="10" name="tweets" <% if (last_tweets !=='2500' && last_tweets
+                                !=='' && last_tweets>= 0 &&
+                            last_tweets <= 300 & typeof(last_tweets)=="number" ) { %>
+                                value="<%=last_tweets%>"
+                                    <%}%>>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="likesRange" class="form-label">Average Likes At Least: <span id="likesEval"
+                                    class="text-primary">
+                                    <% if (last_likes !=='5' && last_likes !=='' && last_likes>= 0 &&
+                                        last_likes <= 50 & typeof(last_tweets)=="number" ){ %>
+                                            <%=last_likes%>
+                                                <%} else {%>
+                                                    3
+                                                    <% }%>
+                                </span> </label>
+                            <input type="range" class="form-range" id="likesRange"
+                                onChange="document.getElementById('likesEval').innerText = document.getElementById('likesRange').value"
+                                min="0" max="50" step="1" name="likes" <% if (last_likes !=='5' && last_likes !=='' &&
+                                last_likes>= 0 &&
+                            last_likes <= 50 & typeof(last_tweets)=="number" ){ %>
+                                value="<%=last_likes%>"
+                                    <%} else {%>
+                                        value="3"
+                                        <% }%>>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="repliesRange" class="form-label">Average Replies At Least: <span
+                                    id="repliesEval" class="text-primary">
+                                    <% if (last_replies !=='5' && last_replies !=='' && last_replies>= 0 &&
+                                        last_replies <=50 & typeof(last_replies)=="number" ){ %>
+                                            <%=last_replies%>
+                                                <%} else {%>
+                                                    3
+                                                    <% }%>
+                                </span> </label>
+                            <input type="range" class="form-range" id="repliesRange"
+                                onChange="document.getElementById('repliesEval').innerText = document.getElementById('repliesRange').value"
+                                min="0" max="50" step="1" name="replies" <% if (last_replies !=='5' && last_replies
+                                !=='' && last_replies>= 0 &&
+                            last_replies <= 50 & typeof(last_replies)=="number" ){ %>
+                                value="<%=last_replies%>"
+                                    <%} else {%>
+                                        value="3"
+                                        <% }%>>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="retweetsRange" class="form-label">Average Retweets At Least: <span
+                                    id="retweetsEval" class="text-primary">
+                                    <% if (last_retweets !=='5' && last_retweets !=='' && last_retweets>= 0 &&
+                                        last_retweets <= 50 & typeof(last_retweets)=="number" ){ %>
+                                            <%=last_retweets%>
+                                                <%} else {%>
+                                                    3
+                                                    <% }%>
+                                </span> </label>
+                            <input type="range" class="form-range" id="retweetsRange"
+                                onChange="document.getElementById('retweetsEval').innerText = document.getElementById('retweetsRange').value"
+                                min="0" max="50" step="1" name="retweets" <% if (last_retweets !=='5' && last_retweets
+                                !=='' && last_retweets>= 0 &&
+                            last_retweets <= 50 & typeof(last_retweets)=="number" ){ %>
+                                value="<%=last_retweets%>"
+                                    <%} else {%>
+                                        value="3"
+                                        <% }%>>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <input type="submit" class="btn btn-info" value="Search!">
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,198 @@
+<% layout('layouts/boilerplate')%>
+    <h4 class="">Explore Upcoming Projects:</h4>
+    <%- include('partials/searchsortfilter') %>
+        <table class="table table-striped table mt-3 px-5">
+            <thead>
+                <tr>
+                    <th scope="col" style="width: 20%"></th>
+                    <th scope="col" style="width: 20%">Project</th>
+                    <th scope="col" style="width: 8%">Followers</th>
+                    <th scope="col" style="width: 8%"># Tweets</th>
+                    <th scope="col" style="width: 9%">Avg Likes</th>
+                    <th scope="col" style="width: 9%">Avg Replies</th>
+                    <th scope="col" style="width: 12%">Avg Retweets</th>
+                    <th scope="col" style="width: 13%">Drop Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (let project of projects) { %>
+                    <tr>
+                        <td>
+                            <% if (project.image !==undefined && project.image !=='none' ) { %>
+                                <img src="<%=project.image%>" alt="NFT project image" class="img-thumbnail img-fluid"
+                                    style="max-width:30%; background: #17a2b8;" onerror="this.onerror=null;this.src='/images/no_image.jpg';">
+                                <% } else {%>
+                                    <img src="/images/no_image.jpg" alt="NFT project image"
+                                        class="img-thumbnail img-fluid" style="max-width:30%; background: #17a2b8">
+                                    <% } %>
+                        </td>
+
+                        <td class="align-middle">
+                            <!-- Button trigger modal -->
+                            <button type="button" <% if (last_sort=='title' ) {%>class="text-info
+                                modal-underline-hover title-button"
+                                <%} else {%>class="text-dark modal-underline-hover title-button"
+                                    <%}%> data-bs-toggle="modal"
+                                        data-bs-target="#<%=project.tag%>" style="background:transparent">
+                                            <%=project.title%>
+                            </button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="<%=project.tag%>" tabindex="-1"
+                                aria-labelledby="<%=project.tag%>Label" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="<%=project.tag%>Label">
+                                                <%=project.title%>
+                                            </h5>
+
+                                        </div>
+
+                                        <div class="modal-body">
+                                            <% if (project.description) { %>
+                                                <p style="font-size: large"> Description:
+                                                    <%=project.description%>
+                                                </p>
+                                                <%}%>
+                                                    <div style="font-size: large">Socials:
+                                                        <% if (project.twitter_link) { %>
+                                                            <a href="<%=project.twitter_link%>" target="_blank"
+                                                                class="text-decoration-none text-dark">
+                                                                <img src="/images/twitter_icon.png"
+                                                                    alt="NFT twitter link" style="max-width:5%;"
+                                                                    class="img-fluid">
+                                                                @<%=project.twitter_handle%> |
+                                                            </a>
+                                                            <% }%>
+                                                                <% if (project.discord) { %>
+                                                                    <a href="<%=project.discord%>" target="_blank"
+                                                                        class="text-decoration-none text-dark">
+                                                                        <img src="/images/discord_icon.png"
+                                                                            alt="NFT project discord link"
+                                                                            style="max-width:5%;" class="img-fluid"> |
+                                                                    </a>
+                                                                    <% }%>
+
+
+                                                                        <% if (project.website) { %>
+                                                                            <a href="<%=project.website%>"
+                                                                                target="_blank"
+                                                                                class="text-decoration-none text-dark">
+                                                                                <%=project.display_url%>
+                                                                            </a>
+
+                                                                            <% }%>
+                                                    </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-info"
+                                                data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        <td <% if(last_sort=='followers' || last_sort=='' ) {%>
+                            class="align-middle text-info font-weight-bold"
+                            <% } else {%>
+                                class="align-middle"
+                                <%}%>>
+                                    <%=project.followers%>
+                        </td>
+                        <td <% if (last_sort=='num_tweets' ) { %>
+                            class="align-middle text-info font-weight-bold"
+                            <%} else {%>
+                                class="align-middle"
+                                <% } %>>
+                                    <%=project.num_tweets%>
+                        </td>
+                        <td <% if (last_sort=='avg_likes' ) { %>
+                            class="align-middle text-info font-weight-bold"
+                            <%} else {%>
+                                class='align-middle'
+                                <%}%>>
+                                    <%=project.avg_likes%>
+                        </td>
+                        <td <% if (last_sort=='avg_replies' ) { %>
+                            class="align-middle text-info font-weight-bold"
+                            <%} else {%>
+                                class='align-middle'
+                                <%}%>>
+                                    <%=project.avg_replies%>
+                        </td>
+                        <td <% if (last_sort=='avg_retweets' ) { %>
+                            class="align-middle text-info font-weight-bold"
+                            <%} else {%>
+                                class='align-middle'
+                                <%}%>>
+                                    <%=project.avg_retweets%>
+                        </td>
+                        <td <% if (last_sort=='internal_date' ) { %>
+                            class="align-middle text-info font-weight-bold"
+                            <%} else {%>
+                                class='align-middle'
+                                <%}%>>
+                                    <%=project.drop_date%>
+                        </td>
+                        <% } %>
+            </tbody>
+        </table>
+
+        <div class="flex-row d-flex mt-3 mb-4">
+            <% if (page> 0 && page != 1) {%>
+                <div class="mr-3">
+                    <form action="/" method="GET">
+                        <input type="hidden" name="page" value=<%=parseInt(page) - 1%>>
+                        <input type="hidden" name="sortBy" value=<%=last_sort%>>
+                        <input type="hidden" name="followers" value=<%=last_followers%>>
+                        <input type="hidden" name="tweets" value=<%=last_tweets%>>
+                        <input type="hidden" name="retweets" value=<%=last_retweets%>>
+                        <input type="hidden" name="replies" value=<%=last_replies%>>
+                        <input type="hidden" name="retweets" value=<%=last_retweets%>>
+                        <button type="Submit" class="btn btn-outline-info">Previous Page</button>
+                    </form>
+                </div>
+                <% } %>
+                    <% if (page < total_pages && projects_length> limit) { %>
+                        <form action="/" method="GET">
+                            <input type="hidden" name="page" value=<%=parseInt(page) + 1%>>
+                            <input type="hidden" name="sortBy" value=<%=last_sort%>>
+                            <input type="hidden" name="followers" value=<%=last_followers%>>
+                            <input type="hidden" name="tweets" value=<%=last_tweets%>>
+                            <input type="hidden" name="retweets" value=<%=last_retweets%>>
+                            <input type="hidden" name="replies" value=<%=last_replies%>>
+                            <input type="hidden" name="retweets" value=<%=last_retweets%>>
+                            <button type="Submit" class="btn btn-outline-info">Next Page</button>
+
+                        </form>
+                        <% }%>
+
+        </div>
+
+        <% if (none_found==true) { %>
+            <h3>No Results Found. <a href="/">Refresh</a></h3>
+            <%} %>
+                <script>
+                    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+                    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                        return new bootstrap.Tooltip(tooltipTriggerEl)
+                    })
+                </script>
+                <!-- Search bar -->
+                <script>
+                    jQuery('#search_bar').on('change', function () {
+                        query = 'search=' + $(this).val();
+                        window.location.search = query;
+                    })
+
+                    // Runs search if enter key pressed
+                    jQuery('#search_bar').keypress(function (event) {
+                        if (event.which == 13) {
+                            event.preventDefault(); // Without this line, form submits and redirects to /
+                            query = 'search=' + $(this).val();
+                            window.location.search = query;
+                        }
+                    }
+                    )
+                </script>

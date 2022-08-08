@@ -1,0 +1,411 @@
+<% layout('layouts/boilerplate')%>
+    <!-- Search sort filter -->
+    <!-- Search Bar -->
+    <form action="" class=" mr-3">
+        <div class="input-group mb-3 flex-fill flex-grow-1 w-100">
+            <div class="input-group-prepend">
+                <span class="input-group-text border-info" id="basic-addon1"
+                    style="background-color: transparent;">🔎</span>
+            </div>
+            <input type="text" class="form-control border-info" placeholder="Search" aria-label="Username"
+                aria-describedby="basic-addon1" id="search_bar">
+        </div>
+    </form>
+    <!-- Sort & Filter -->
+    <button type="button" class="btn btn-outline-info flex-fill w-100" data-bs-toggle="modal"
+        data-bs-target="#sortFilterModal">Sort & Filter</button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="sortFilterModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Sort & Filter</h5>
+                </div>
+                <div class="modal-body">
+                    <form action="/" method="GET">
+                        <h5 class="mb-2">Sort by...</h5>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="sortBy" id="followersDesc"
+                                value="followers" <% if (last_sort=='followers' || last_sort=='' ) { %> checked
+                            <% } %>>
+                                <label class="form-check-label" for="followersDesc">
+                                    Twitter Followers
+                                </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="sortBy" id="tweetsDesc"
+                                value="num_tweets" <% if (last_sort=='num_tweets' ) { %> checked <% } %>>
+                                <label class="form-check-label" for="tweetsDesc">
+                                    Number of Tweets
+                                </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="sortBy" id="avglikes" value="avg_likes"
+                                <% if (last_sort=='avg_likes' ) { %> checked <% } %>>
+                                <label class="form-check-label" for="avglikes">
+                                    Average Tweet Likes
+                                </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="sortBy" id="avgreplies"
+                                value="avg_replies" <% if (last_sort=='avg_replies' ) { %> checked <% } %>>
+                                <label class="form-check-label" for="avgreplies">
+                                    Average Tweet Replies
+                                </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="sortBy" id="avgretweets"
+                                value="avg_retweets" <% if (last_sort=='avg_retweets' ) { %> checked <% } %>>
+                                <label class="form-check-label" for="avgretweets">
+                                    Average Tweet Retweets
+                                </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="sortBy" id="mintDesc"
+                                value="internal_date" <% if (last_sort=='internal_date' ) { %> checked <% } %>>
+                                <label class="form-check-label" for="mintDesc">
+                                    Drop Date
+                                </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="sortBy" id="titleDesc" value="title" <%
+                                if (last_sort=='title' ) { %> checked <% } %>>
+                                <label class="form-check-label" for="titleDesc">
+                                    Title Alphabetically
+                                </label>
+                        </div>
+                        <h5 class="mt-3 mb-2">Filter...</h5>
+                        <!-- Follower filter -->
+                        <!-- If statements dynamically change slider values and placeholders -->
+                        <div class="form-group">
+                            <label for="followersRange" class="form-label">Followers At Least: <span id="followersEval"
+                                    class="text-primary">
+                                    <% if (last_followers !==10000 && last_followers !=='' && last_followers>= 0
+                                        &&
+                                        last_followers <= 20000 && typeof(last_followers)=="number" ) { %>
+                                            <%=last_followers%>
+                                                <%} else {%>
+                                                    10000
+                                                    <%}%>
+                                </span> </label>
+                            <input type="range" class="form-range" id="followersRange"
+                                onChange="document.getElementById('followersEval').innerText = document.getElementById('followersRange').value"
+                                min="0" max="20000" step="200" name="followers" <% if (last_followers !==10000 &&
+                                last_followers !=='' && last_followers>= 0 &&
+                            last_followers <= 20000 && typeof(last_followers)=="number" ) { %>
+                                value="<%=last_followers%>"
+                                    <%} %>>
+                        </div>
+                        <!-- Number of tweets filter -->
+                        <div class="form-group">
+                            <label for="tweetsRange" class="form-label">Tweets At Least: <span id="tweetsEval"
+                                    class="text-primary">
+                                    <% if (last_tweets !=='2500' && last_tweets !=='' && last_tweets>= 0 &&
+                                        last_tweets <= 300 & typeof(last_tweets)=="number" ){ %>
+                                            <%=last_tweets%>
+                                                <%} else {%>
+                                                    150
+                                                    <% }%>
+                                </span> </label>
+                            <input type="range" class="form-range" id="tweetsRange"
+                                onChange="document.getElementById('tweetsEval').innerText = document.getElementById('tweetsRange').value"
+                                min="0" max="300" step="10" name="tweets" <% if (last_tweets !=='2500' && last_tweets
+                                !=='' && last_tweets>= 0 &&
+                            last_tweets <= 300 & typeof(last_tweets)=="number" ) { %>
+                                value="<%=last_tweets%>"
+                                    <%}%>>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="likesRange" class="form-label">Average Likes At Least: <span id="likesEval"
+                                    class="text-primary">
+                                    <% if (last_likes !=='5' && last_likes !=='' && last_likes>= 0 &&
+                                        last_likes <= 50 & typeof(last_tweets)=="number" ){ %>
+                                            <%=last_likes%>
+                                                <%} else {%>
+                                                    3
+                                                    <% }%>
+                                </span> </label>
+                            <input type="range" class="form-range" id="likesRange"
+                                onChange="document.getElementById('likesEval').innerText = document.getElementById('likesRange').value"
+                                min="0" max="50" step="1" name="likes" <% if (last_likes !=='5' && last_likes !=='' &&
+                                last_likes>= 0 &&
+                            last_likes <= 50 & typeof(last_tweets)=="number" ){ %>
+                                value="<%=last_likes%>"
+                                    <%} else {%>
+                                        value="3"
+                                        <% }%>>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="repliesRange" class="form-label">Average Replies At Least: <span
+                                    id="repliesEval" class="text-primary">
+                                    <% if (last_replies !=='5' && last_replies !=='' && last_replies>= 0 &&
+                                        last_replies <=50 & typeof(last_replies)=="number" ){ %>
+                                            <%=last_replies%>
+                                                <%} else {%>
+                                                    3
+                                                    <% }%>
+                                </span> </label>
+                            <input type="range" class="form-range" id="repliesRange"
+                                onChange="document.getElementById('repliesEval').innerText = document.getElementById('repliesRange').value"
+                                min="0" max="50" step="1" name="replies" <% if (last_replies !=='5' && last_replies
+                                !=='' && last_replies>= 0 &&
+                            last_replies <= 50 & typeof(last_replies)=="number" ){ %>
+                                value="<%=last_replies%>"
+                                    <%} else {%>
+                                        value="3"
+                                        <% }%>>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="retweetsRange" class="form-label">Average Retweets At Least: <span
+                                    id="retweetsEval" class="text-primary">
+                                    <% if (last_retweets !=='5' && last_retweets !=='' && last_retweets>= 0 &&
+                                        last_retweets <= 50 & typeof(last_retweets)=="number" ){ %>
+                                            <%=last_retweets%>
+                                                <%} else {%>
+                                                    3
+                                                    <% }%>
+                                </span> </label>
+                            <input type="range" class="form-range" id="retweetsRange"
+                                onChange="document.getElementById('retweetsEval').innerText = document.getElementById('retweetsRange').value"
+                                min="0" max="50" step="1" name="retweets" <% if (last_retweets !=='5' && last_retweets
+                                !=='' && last_retweets>= 0 &&
+                            last_retweets <= 50 & typeof(last_retweets)=="number" ){ %>
+                                value="<%=last_retweets%>"
+                                    <%} else {%>
+                                        value="3"
+                                        <% }%>>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <input type="submit" class="btn btn-info" value="Search!">
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <table class="table table-striped table mt-3">
+        <thead>
+            <tr>
+                <th scope="col" style="width: 40%"></th>
+                <th scope="col" style="width: 30%">Project</th>
+                <% if(last_sort=='followers' || last_sort=='' || last_sort=='title' ) { %>
+                    <th scope="col" style="width: 30%">Followers</th>
+                    <%}%>
+                        <% if(last_sort=='num_tweets' ) { %>
+                            <th scope="col" style="width: 30%"># Tweets</th>
+                            <%}%>
+                                <% if(last_sort=='avg_likes' ) { %>
+                                    <th scope="col" style="width: 30%">Avg Likes</th>
+
+                                    <%}%>
+                                        <% if(last_sort=='avg_replies' ) { %>
+                                            <th scope="col" style="width: 30%">Avg Replies</th>
+                                            <%}%>
+                                                <% if(last_sort=='avg_retweets' ) { %>
+                                                    <th scope="col" style="width: 30%">Avg Retweets</th>
+                                                    <%}%>
+                                                        <% if(last_sort=='internal_date' ) { %>
+                                                            <th scope="col" style="width: 30%">Drop Date</th>
+                                                            <%}%>
+        </thead>
+
+        <% for (let project of projects) { %>
+            <tr>
+                <td>
+                            <% if (project.image !==undefined && project.image !=='none' ) { %>
+                        <img src="<%=project.image%>" alt="NFT project image" class="img-thumbnail img-fluid"
+                            style="max-width:60%; background: #17a2b8;" onerror="this.onerror=null;this.src='/images/no_image.jpg';">
+                        <% } else {%>
+                            <img src="/images/no_image.jpg" alt="NFT project image" class="img-thumbnail img-fluid"
+                                style="max-width:60%; background: #17a2b8">
+                            <% } %>
+                </td>
+
+                <td class="align-middle">
+                    <!-- Button trigger modal -->
+                    <button type="button" <% if (last_sort=='title' ) {%>class="text-info
+                        modal-underline-hover font-weight-bold title-button"
+                        <%} else {%>class="text-dark modal-underline-hover title-button"
+                            <%}%> data-bs-toggle="modal"
+                                data-bs-target="#<%=project.tag%>" style="background:transparent">
+                                    <%=project.title%>
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="<%=project.tag%>" tabindex="-1" aria-labelledby="<%=project.tag%>Label"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="<%=project.tag%>Label">
+                                        <%=project.title%>
+                                    </h5>
+
+                                </div>
+
+                                <div class="modal-body">
+                                    <% if (project.description) { %>
+                                        <p style="font-size: large"> Description:
+                                            <%=project.description%>
+                                        </p>
+                                        <%}%>
+                                            <div class='mb-3' style="font-size: large">Socials:
+                                                <% if (project.twitter_link) { %>
+                                                    <a href="<%=project.twitter_link%>" target="_blank"
+                                                        class="text-decoration-none text-dark">
+                                                        <img src="/images/twitter_icon.png" alt="NFT twitter link"
+                                                            style="max-width:5%;" class="img-fluid">
+                                                        @<%=project.twitter_handle%> |
+                                                    </a>
+                                                    <% }%>
+                                                        <% if (project.discord) { %>
+                                                            <a href="<%=project.discord%>" target="_blank"
+                                                                class="text-decoration-none text-dark">
+                                                                <img src="/images/discord_icon.png"
+                                                                    alt="NFT project discord link" style="max-width:5%;"
+                                                                    class="img-fluid"> |
+                                                            </a>
+                                                            <% }%>
+
+
+                                                                <% if (project.website) { %>
+                                                                    <a href="<%=project.website%>" target="_blank"
+                                                                        class="text-decoration-none text-dark">
+                                                                        <%=project.display_url%>
+                                                                    </a>
+
+                                                                    <% }%>
+                                            </div>
+                                            <ul class="list-group mb-3">
+                                                <li class="list-group-item">Followers: <%=project.followers%>
+                                                </li>
+                                                <li class="list-group-item">Tweets: <%=project.num_tweets%>
+                                                </li>
+                                                <li class="list-group-item">Average Likes: <%=project.avg_likes%>
+                                                </li>
+                                                <li class="list-group-item">Average Replies:
+                                                    <%=project.avg_replies%>
+                                                </li>
+                                                <li class="list-group-item">Average Retweets:
+                                                    <%=project.avg_retweets%>
+                                                </li>
+                                                <li class="list-group-item">Drop Date:
+                                                    <%=project.drop_date%>
+                                                </li>
+                                            </ul>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-info" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <% if(last_sort=='followers' || last_sort=='title' || last_sort=='' ) {%>
+                <td <% if (last_sort=='followers' ) { %>
+                    class="align-middle text-info font-weight-bold"
+                    <%} else {%>
+                        class="align-middle"
+                        <%}%>>
+                            <%=project.followers%>
+                </td>
+                <%}%>
+
+                    <% if(last_sort=='num_tweets' ) {%>
+                        <td class="align-middle text-info font-weight-bold">
+                            <%=project.num_tweets%>
+                        </td>
+                        <%}%>
+
+                            <% if(last_sort=='avg_likes' ) {%>
+                                <td class="align-middle text-info font-weight-bold">
+                                    <%=project.avg_likes%>
+                                </td>
+                                <%}%>
+
+                                    <% if(last_sort=='avg_replies' ) {%>
+                                        <td class="align-middle text-info font-weight-bold">
+                                            <%=project.avg_replies%>
+                                        </td>
+                                        <%}%>
+
+                                            <% if(last_sort=='avg_retweets' ) {%>
+                                                <td class="align-middle text-info font-weight-bold">
+                                                    <%=project.avg_retweets%>
+                                                </td>
+                                                <%}%>
+
+                                                    <% if(last_sort=='internal_date' ) {%>
+                                                        <td class="align-middle text-info font-weight-bold">
+                                                            <%=project.drop_date%>
+                                                        </td>
+                                                        <%}%>
+            </tr>
+            <%}%>
+    </table>
+
+    <div class="flex-row d-flex mt-3 mb-4">
+        <% if (page> 0 && page != 1) {%>
+            <div class="mr-3">
+                <form action="/" method="GET">
+                    <input type="hidden" name="page" value=<%=parseInt(page) - 1%>>
+                    <input type="hidden" name="sortBy" value=<%=last_sort%>>
+                    <input type="hidden" name="followers" value=<%=last_followers%>>
+                    <input type="hidden" name="tweets" value=<%=last_tweets%>>
+                    <input type="hidden" name="retweets" value=<%=last_retweets%>>
+                    <input type="hidden" name="replies" value=<%=last_replies%>>
+                    <input type="hidden" name="retweets" value=<%=last_retweets%>>
+                    <button type="Submit" class="btn btn-outline-info">Previous Page</button>
+                </form>
+            </div>
+            <% } %>
+                <% if (page < total_pages && projects_length> limit) { %>
+                    <form action="/" method="GET">
+                        <input type="hidden" name="page" value=<%=parseInt(page) + 1%>>
+                        <input type="hidden" name="sortBy" value=<%=last_sort%>>
+                        <input type="hidden" name="followers" value=<%=last_followers%>>
+                        <input type="hidden" name="tweets" value=<%=last_tweets%>>
+                        <input type="hidden" name="retweets" value=<%=last_retweets%>>
+                        <input type="hidden" name="replies" value=<%=last_replies%>>
+                        <input type="hidden" name="retweets" value=<%=last_retweets%>>
+                        <button type="Submit" class="btn btn-outline-info">Next Page</button>
+
+                    </form>
+                    <% }%>
+
+    </div>
+
+    <% if (none_found==true) { %>
+        <h3>No Results Found. <a href="/">Refresh</a></h3>
+        <%} %>
+            <script>
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl)
+                })
+            </script>
+            <!-- Search bar -->
+            <script>
+                jQuery('#search_bar').on('change', function () {
+                    query = 'search=' + $(this).val();
+                    window.location.search = query;
+                })
+
+                // Runs search if enter key pressed
+                jQuery('#search_bar').keypress(function (event) {
+                    if (event.which == 13) {
+                        event.preventDefault(); // Without this line, form submits and redirects to /
+                        query = 'search=' + $(this).val();
+                        window.location.search = query;
+                    }
+                }
+                )
+            </script>
