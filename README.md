@@ -71,11 +71,7 @@ You may run this project locally by following these steps:
    ```sh
    node app.js
    ```
-
-## Known Bugs
-- IntroJs.oncomplete error causing onboarding to end after first slide
-- User changing playlist visibility sets image to blank 
-
+   
 <!-- CONTACT -->
 ## Contact
 
