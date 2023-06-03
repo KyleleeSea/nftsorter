@@ -12,7 +12,7 @@
       An auto-updating database of upcoming NFT projects with their Twitter engagement analytics.
     </h4>
     <br />
-    <a href="https://nftsorter.com/">View Demo</a>
+<!--     <a href="https://nftsorter.com/">View Demo</a> -->
     ·
     <a href="https://github.com/KyleleeSea/nftsorter/issues">Report Bug</a>
     ·
@@ -48,11 +48,11 @@ The database is updated through the .js files found in /controllers. The deploye
 * [![MongoDB][mongodb.com]][mongodb-url]
 * [![Nodemailer][nodemailer.com]][nodemailer-url]
 * [![Twitter API][twitter.com]][twitter-url]
-
+<!-- 
 ## Live Demo
 
 Please view the full demo of NFT Sorter here: <a href="https://nftsorter.com/">NFTSorter.com</a>
-
+ -->
 ## Local Copy
 You may run this project locally by following these steps:
 
